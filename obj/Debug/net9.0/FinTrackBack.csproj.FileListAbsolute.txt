@@ -159,3 +159,4 @@ C:\Users\fabri\OneDrive\Desktop\backend-fintrack-fixed\backend-fintrack-fixed\Fi
 C:\Users\fabri\OneDrive\Desktop\backend-fintrack-fixed\backend-fintrack-fixed\FinTrackBack\obj\Debug\net9.0\FinTrackBack.pdb
 C:\Users\fabri\OneDrive\Desktop\backend-fintrack-fixed\backend-fintrack-fixed\FinTrackBack\obj\Debug\net9.0\FinTrackBack.genruntimeconfig.cache
 C:\Users\fabri\OneDrive\Desktop\backend-fintrack-fixed\backend-fintrack-fixed\FinTrackBack\obj\Debug\net9.0\ref\FinTrackBack.dll
+C:\Users\fabri\OneDrive\Desktop\backend-fintrack-fixed\backend-fintrack-fixed\FinTrackBack\obj\Debug\net9.0\FinTrackBack.sourcelink.json
