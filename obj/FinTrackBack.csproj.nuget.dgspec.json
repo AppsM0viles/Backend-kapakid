@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\fabri\\OneDrive\\Desktop\\backend-fintrack-fixed\\backend-fintrack-fixed\\FinTrackBack\\FinTrackBack.csproj": {}
+    "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Desktop\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj": {}
   },
   "projects": {
-    "C:\\Users\\fabri\\OneDrive\\Desktop\\backend-fintrack-fixed\\backend-fintrack-fixed\\FinTrackBack\\FinTrackBack.csproj": {
+    "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Desktop\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\fabri\\OneDrive\\Desktop\\backend-fintrack-fixed\\backend-fintrack-fixed\\FinTrackBack\\FinTrackBack.csproj",
+        "projectUniqueName": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Desktop\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj",
         "projectName": "FinTrackBack",
-        "projectPath": "C:\\Users\\fabri\\OneDrive\\Desktop\\backend-fintrack-fixed\\backend-fintrack-fixed\\FinTrackBack\\FinTrackBack.csproj",
-        "packagesPath": "C:\\Users\\fabri\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\fabri\\OneDrive\\Desktop\\backend-fintrack-fixed\\backend-fintrack-fixed\\FinTrackBack\\obj\\",
+        "projectPath": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Desktop\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj",
+        "packagesPath": "C:\\Users\\rault\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Desktop\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\fabri\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\rault\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -96,6 +96,24 @@
           ],
           "assetTargetFallback": true,
           "warn": true,
+          "downloadDependencies": [
+            {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[9.0.15, 9.0.15]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[9.0.15, 9.0.15]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[9.0.15, 9.0.15]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
+              "version": "[9.0.15, 9.0.15]"
+            }
+          ],
           "frameworkReferences": {
             "Microsoft.AspNetCore.App": {
               "privateAssets": "none"
