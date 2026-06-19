@@ -32,7 +32,7 @@ public class NotificationsController : ControllerBase
     }
 
     [HttpGet("{id:guid}")]
-    public async Task<ActionResult<NotificationDto>> GetById(Guid id)
+    public ActionResult<NotificationDto> GetById(Guid id)
     {
         return NotFound();
     }
