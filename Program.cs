@@ -1,23 +1,16 @@
-
 using Microsoft.EntityFrameworkCore;
 using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
-
 using FinTrackBack.Authentication.Infrastructure.Persistence.DbContext;
 using FinTrackBack.Authentication.Application.Interfaces;
 using FinTrackBack.Authentication.Infrastructure.Security;
-
 using FinTrackBack.Notifications.Domain.Interfaces;
 using FinTrackBack.Notifications.Infrastructure.Persistence.Repositories;
-
 using FinTrackBack.Support.Domain.Interfaces;
 using FinTrackBack.Support.Infrastructure.Persistence.Repositories;
-
 using FinTrackBack.Documents.Domain.Interfaces;
 using FinTrackBack.Documents.Infrastructure.Persistence.Repositories;
-
 using FinTrackBack.Payments.Domain.Interfaces;
 using FinTrackBack.Payments.Infrastructure.Persistence.Repositories;
-
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -28,7 +21,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-// --- SWAGGER CON SOPORTE JWT ---
 builder.Services.AddSwaggerGen(options =>
 {
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -52,36 +44,38 @@ builder.Services.AddSwaggerGen(options =>
                     Id = "Bearer"
                 }
             },
-            new string[] {}
+            Array.Empty<string>()
         }
     });
 });
 
-// --- CONEXIÓN A MYSQL ---
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 builder.Services.AddDbContext<FinTrackBackDbContext>(options =>
     options.UseMySql(connectionString,
         new MySqlServerVersion(new Version(8, 0, 21)),
-        mySqlOptions => mySqlOptions.SchemaBehavior(MySqlSchemaBehavior.Ignore))
+        mySqlOptions => 
+        {
+            mySqlOptions.SchemaBehavior(MySqlSchemaBehavior.Ignore);
+            mySqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,
+                maxRetryDelay: TimeSpan.FromSeconds(30),
+                errorNumbersToAdd: null);
+        })
 );
 
-// --- INYECCIÓN DE DEPENDENCIAS ---
 builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
 builder.Services.AddScoped<IDocumentRepository, DocumentRepository>();
 builder.Services.AddScoped<INotificationRepository, NotificationRepository>();
 builder.Services.AddScoped<ISupportTicketRepository, SupportTicketRepository>();
 
-// --- MEDIATOR ---
 builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssembly(typeof(Program).Assembly)
 );
 
-// --- SEGURIDAD ---
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 
-// --- AUTENTICACIÓN JWT ---
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -102,7 +96,6 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// --- MIGRACIONES AUTOMÁTICAS ---
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<FinTrackBackDbContext>();
@@ -114,8 +107,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-//app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
