@@ -22,11 +22,14 @@ public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, G
         
         var user = new User
         {
-            Id = Guid.NewGuid(), 
+            Id = Guid.NewGuid(),
             Nombre = request.Nombre,
             Email = request.Email,
             PasswordHash = passwordHash,
-            Premium = false 
+            Dni = request.Dni,
+            FechaNacimiento = request.FechaNacimiento,
+            EsUniversitario = request.EsUniversitario,
+            Premium = false
         };
         
         await _context.Users.AddAsync(user, cancellationToken);

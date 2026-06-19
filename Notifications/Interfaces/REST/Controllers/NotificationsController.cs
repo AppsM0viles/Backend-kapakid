@@ -1,5 +1,6 @@
 using FinTrackBack.Notifications.Application.DTOs;
 using FinTrackBack.Notifications.Application.Features.CreateNotification;
+using FinTrackBack.Notifications.Application.Features.GetNotifications;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,11 +24,16 @@ public class NotificationsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = result.Id }, result);
     }
 
-    // Stub simple para que CreatedAtAction no reviente
+    [HttpGet("user/{userId:guid}")]
+    public async Task<ActionResult<List<NotificationDto>>> GetByUserId(Guid userId)
+    {
+        var result = await _mediator.Send(new GetNotificationsByUserIdQuery { UserId = userId });
+        return Ok(result);
+    }
+
     [HttpGet("{id:guid}")]
     public async Task<ActionResult<NotificationDto>> GetById(Guid id)
     {
-        // TODO: implementar query de lectura
         return NotFound();
     }
 }

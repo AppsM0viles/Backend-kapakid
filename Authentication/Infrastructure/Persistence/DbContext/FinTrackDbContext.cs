@@ -6,6 +6,7 @@ using FinTrackBack.Notifications.Infrastructure.Persistence.DbContext;
 using FinTrackBack.Payments.Domain.Entities;
 using FinTrackBack.Support.Domain.Entities;
 using FinTrackBack.Support.Infrastructure.Persistence.DbContext;
+using FinTrackBack.Wallet.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace FinTrackBack.Authentication.Infrastructure.Persistence.DbContext;
@@ -16,20 +17,13 @@ public class FinTrackBackDbContext : Microsoft.EntityFrameworkCore.DbContext
     {
     }
 
-    // 👤 Usuarios
     public DbSet<User> Users { get; set; }
-
-    // 💳 Pagos
     public DbSet<Payment> Payments { get; set; }
-
-    // 📄 Documentos
     public DbSet<Document> Documents { get; set; }
-
-    // 🔔 Notificaciones
     public DbSet<Notification> Notifications { get; set; }
-
-    // 🎫 Tickets de soporte
     public DbSet<SupportTicket> SupportTickets { get; set; }
+    public DbSet<PaymentCard> PaymentCards { get; set; }
+    public DbSet<TransportCard> TransportCards { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -37,6 +31,8 @@ public class FinTrackBackDbContext : Microsoft.EntityFrameworkCore.DbContext
 
         modelBuilder.Entity<User>().ToTable("Users");
         modelBuilder.Entity<Payment>().ToTable("Payments");
+        modelBuilder.Entity<PaymentCard>().ToTable("PaymentCards");
+        modelBuilder.Entity<TransportCard>().ToTable("TransportCards");
 
         modelBuilder.ApplyConfiguration(new DocumentConfiguration());
         modelBuilder.ApplyConfiguration(new NotificationConfiguration());

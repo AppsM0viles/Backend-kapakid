@@ -21,17 +21,9 @@ public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, LoginUserRe
 
     public async Task<LoginUserResponse> Handle(LoginUserQuery request, CancellationToken cancellationToken)
     {
-        var user = await _context.Users
-            .FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email, cancellationToken);
         
-        if (user == null)
-        {
-            throw new Exception("Email o contraseña inválidos."); 
-        }
-        
-        var passwordIsValid = _passwordHasher.VerifyPassword(request.Password, user.PasswordHash);
-        
-        if (!passwordIsValid)
+        if (user == null || !_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
         {
             throw new Exception("Email o contraseña inválidos.");
         }
@@ -43,6 +35,9 @@ public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, LoginUserRe
             Id = user.Id,
             Nombre = user.Nombre,
             Email = user.Email,
+            Dni = user.Dni,
+            FechaNacimiento = user.FechaNacimiento,
+            EsUniversitario = user.EsUniversitario,
             Premium = user.Premium
         };
         
