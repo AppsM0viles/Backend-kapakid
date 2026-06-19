@@ -24,9 +24,8 @@ public class SupportController : ControllerBase
     }
 
     [HttpGet("tickets/{id:guid}")]
-    public async Task<ActionResult<SupportTicketDto>> GetById(Guid id)
+    public ActionResult<SupportTicketDto> GetById(Guid id)
     {
-        // TODO: implementar query de lectura
         return NotFound();
     }
 }
