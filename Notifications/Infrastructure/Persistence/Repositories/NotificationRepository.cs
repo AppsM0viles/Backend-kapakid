@@ -20,4 +20,12 @@ public class NotificationRepository : INotificationRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
         return notification;
     }
+
+    public async Task<List<Notification>> GetByUserIdAsync(Guid userId)
+    {
+        return await _dbContext.Notifications
+            .Where(n => n.UserId == userId)
+            .OrderByDescending(n => n.CreatedAt)
+            .ToListAsync();
+    }
 }

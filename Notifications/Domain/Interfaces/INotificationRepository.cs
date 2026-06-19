@@ -5,4 +5,5 @@ namespace FinTrackBack.Notifications.Domain.Interfaces;
 public interface INotificationRepository
 {
     Task<Notification> AddAsync(Notification notification, CancellationToken cancellationToken = default);
+    Task<List<Notification>> GetByUserIdAsync(Guid userId);
 }
