@@ -24,6 +24,7 @@ public class FinTrackBackDbContext : Microsoft.EntityFrameworkCore.DbContext
     public DbSet<SupportTicket> SupportTickets { get; set; }
     public DbSet<PaymentCard> PaymentCards { get; set; }
     public DbSet<TransportCard> TransportCards { get; set; }
+    public DbSet<PaymentTransaction> PaymentTransactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +34,7 @@ public class FinTrackBackDbContext : Microsoft.EntityFrameworkCore.DbContext
         modelBuilder.Entity<Payment>().ToTable("Payments");
         modelBuilder.Entity<PaymentCard>().ToTable("PaymentCards");
         modelBuilder.Entity<TransportCard>().ToTable("TransportCards");
+        modelBuilder.Entity<PaymentTransaction>().ToTable("PaymentTransactions");
 
         modelBuilder.ApplyConfiguration(new DocumentConfiguration());
         modelBuilder.ApplyConfiguration(new NotificationConfiguration());

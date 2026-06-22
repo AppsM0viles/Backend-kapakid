@@ -9,5 +9,8 @@ public class PaymentCard
     public decimal Balance { get; set; }
     public string ExpiryDate { get; set; } = string.Empty;
     public string Cvv { get; set; } = string.Empty;
+    public string AccountNumber { get; set; } = string.Empty;
+    public string Cci { get; set; } = string.Empty;
+    public decimal DebtAmount { get; set; }
     public DateTime CreatedAt { get; set; }
 }

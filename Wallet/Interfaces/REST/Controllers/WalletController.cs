@@ -38,6 +38,14 @@ public class WalletController : ControllerBase
         return Ok(new { success = true });
     }
 
+    [HttpPut("payment-cards/pay-debt")]
+    public async Task<IActionResult> PayDebt([FromBody] PayDebtCommand command)
+    {
+        var result = await _mediator.Send(command);
+        if (!result) return BadRequest(new { success = false, message = "Saldo insuficiente o tarjeta no encontrada" });
+        return Ok(new { success = true });
+    }
+
     [HttpPost("transport-cards")]
     public async Task<IActionResult> CreateTransportCard([FromBody] CreateTransportCardCommand command)
     {
