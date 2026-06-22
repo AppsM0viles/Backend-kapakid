@@ -31,9 +31,16 @@ public class GetPaymentCardsQuery : IRequest<List<PaymentCardDto>>
     public Guid UserId { get; set; }
 }
 
+public class UpdatePaymentBalanceCommand : IRequest<bool>
+{
+    public Guid CardId { get; set; }
+    public decimal NewBalance { get; set; }
+}
+
 public class PaymentCardHandlers :
     IRequestHandler<CreatePaymentCardCommand, Guid>,
-    IRequestHandler<GetPaymentCardsQuery, List<PaymentCardDto>>
+    IRequestHandler<GetPaymentCardsQuery, List<PaymentCardDto>>,
+    IRequestHandler<UpdatePaymentBalanceCommand, bool>
 {
     private readonly FinTrackBackDbContext _context;
 
@@ -75,5 +82,15 @@ public class PaymentCardHandlers :
                 ExpiryDate = c.ExpiryDate,
                 Cvv = c.Cvv
             }).ToListAsync(cancellationToken);
+    }
+
+    public async Task<bool> Handle(UpdatePaymentBalanceCommand request, CancellationToken cancellationToken)
+    {
+        var card = await _context.PaymentCards.FindAsync(new object[] { request.CardId }, cancellationToken);
+        if (card == null) return false;
+        
+        card.Balance = request.NewBalance;
+        await _context.SaveChangesAsync(cancellationToken);
+        return true;
     }
 }

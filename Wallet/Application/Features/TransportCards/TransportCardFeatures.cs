@@ -28,9 +28,16 @@ public class GetTransportCardsQuery : IRequest<List<TransportCardDto>>
     public Guid UserId { get; set; }
 }
 
+public class UpdateTransportBalanceCommand : IRequest<bool>
+{
+    public Guid CardId { get; set; }
+    public decimal NewBalance { get; set; }
+}
+
 public class TransportCardHandlers :
     IRequestHandler<CreateTransportCardCommand, Guid>,
-    IRequestHandler<GetTransportCardsQuery, List<TransportCardDto>>
+    IRequestHandler<GetTransportCardsQuery, List<TransportCardDto>>,
+    IRequestHandler<UpdateTransportBalanceCommand, bool>
 {
     private readonly FinTrackBackDbContext _context;
 
@@ -70,5 +77,16 @@ public class TransportCardHandlers :
                 CardNumber = c.CardNumber,
                 LastRechargeDate = c.LastRechargeDate
             }).ToListAsync(cancellationToken);
+    }
+
+    public async Task<bool> Handle(UpdateTransportBalanceCommand request, CancellationToken cancellationToken)
+    {
+        var card = await _context.TransportCards.FindAsync(new object[] { request.CardId }, cancellationToken);
+        if (card == null) return false;
+
+        card.Balance = request.NewBalance;
+        card.LastRechargeDate = DateTime.UtcNow;
+        await _context.SaveChangesAsync(cancellationToken);
+        return true;
     }
 }

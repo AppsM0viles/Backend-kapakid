@@ -30,6 +30,14 @@ public class WalletController : ControllerBase
         return Ok(result);
     }
 
+    [HttpPut("payment-cards/update-balance")]
+    public async Task<IActionResult> UpdatePaymentBalance([FromBody] UpdatePaymentBalanceCommand command)
+    {
+        var result = await _mediator.Send(command);
+        if (!result) return NotFound();
+        return Ok(new { success = true });
+    }
+
     [HttpPost("transport-cards")]
     public async Task<IActionResult> CreateTransportCard([FromBody] CreateTransportCardCommand command)
     {
@@ -42,5 +50,13 @@ public class WalletController : ControllerBase
     {
         var result = await _mediator.Send(new GetTransportCardsQuery { UserId = userId });
         return Ok(result);
+    }
+
+    [HttpPut("transport-cards/update-balance")]
+    public async Task<IActionResult> UpdateTransportBalance([FromBody] UpdateTransportBalanceCommand command)
+    {
+        var result = await _mediator.Send(command);
+        if (!result) return NotFound();
+        return Ok(new { success = true });
     }
 }
