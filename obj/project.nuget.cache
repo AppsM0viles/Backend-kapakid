@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "NZN2e8rQkRk=",
+  "dgSpecHash": "O/EBDwruF+Y=",
   "success": true,
-  "projectFilePath": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Desktop\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj",
+  "projectFilePath": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Documents\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\rault\\.nuget\\packages\\bcrypt.net-next\\4.0.3\\bcrypt.net-next.4.0.3.nupkg.sha512",
     "C:\\Users\\rault\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
