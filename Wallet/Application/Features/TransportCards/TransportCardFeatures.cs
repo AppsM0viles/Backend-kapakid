@@ -123,7 +123,7 @@ public class TransportCardHandlers :
         await _context.SaveChangesAsync(cancellationToken);
         return true;
     }
-    
+
     public async Task<List<TransportTransactionDto>?> Handle(GetTransportCardTransactionsQuery request, CancellationToken cancellationToken)
     {
         var cardExists = await _context.TransportCards.AnyAsync(c => c.Id == request.TransportCardId, cancellationToken);
@@ -141,7 +141,7 @@ public class TransportCardHandlers :
             })
             .ToListAsync(cancellationToken);
     }
-    
+
     public async Task<RechargeTransportCardResult> Handle(RechargeTransportCardCommand request, CancellationToken cancellationToken)
     {
         if (request.Amount <= 0)
@@ -150,70 +150,79 @@ public class TransportCardHandlers :
         var transportCard = await _context.TransportCards.FindAsync(new object[] { request.TransportCardId }, cancellationToken);
         if (transportCard == null)
             return new RechargeTransportCardResult { Success = false, Message = "Tarjeta de transporte no encontrada." };
-        
-        await using var dbTransaction = await _context.Database.BeginTransactionAsync(cancellationToken);
-        try
+
+        var strategy = _context.Database.CreateExecutionStrategy();
+
+        return await strategy.ExecuteAsync(async () =>
         {
-            if (request.PaymentCardId.HasValue)
+            await using var dbTransaction = await _context.Database.BeginTransactionAsync(cancellationToken);
+            try
             {
-                var paymentCard = await _context.PaymentCards.FindAsync(new object[] { request.PaymentCardId.Value }, cancellationToken);
-                if (paymentCard == null)
-                    return new RechargeTransportCardResult { Success = false, Message = "Tarjeta de pago no encontrada." };
+                if (request.PaymentCardId.HasValue)
+                {
+                    var paymentCard = await _context.PaymentCards.FindAsync(new object[] { request.PaymentCardId.Value }, cancellationToken);
+                    if (paymentCard == null)
+                    {
+                        await dbTransaction.RollbackAsync(cancellationToken);
+                        return new RechargeTransportCardResult { Success = false, Message = "Tarjeta de pago no encontrada." };
+                    }
 
-                if (paymentCard.Balance < request.Amount)
-                    return new RechargeTransportCardResult { Success = false, Message = "Saldo insuficiente en la tarjeta de pago." };
+                    if (paymentCard.Balance < request.Amount)
+                    {
+                        await dbTransaction.RollbackAsync(cancellationToken);
+                        return new RechargeTransportCardResult { Success = false, Message = "Saldo insuficiente en la tarjeta de pago." };
+                    }
 
-                paymentCard.Balance -= request.Amount;
+                    paymentCard.Balance -= request.Amount;
 
-                await _context.PaymentTransactions.AddAsync(new PaymentTransaction
+                    await _context.PaymentTransactions.AddAsync(new PaymentTransaction
+                    {
+                        Id = Guid.NewGuid(),
+                        PaymentCardId = paymentCard.Id,
+                        Description = "Recarga tarjeta de transporte",
+                        Amount = -request.Amount,
+                        Date = DateTime.UtcNow
+                    }, cancellationToken);
+                }
+
+                transportCard.Balance += request.Amount;
+                transportCard.LastRechargeDate = DateTime.UtcNow;
+
+                var transportTransaction = new TransportTransaction
                 {
                     Id = Guid.NewGuid(),
-                    PaymentCardId = paymentCard.Id,
-                    Description = "Recarga tarjeta de transporte",
-                    Amount = -request.Amount,
+                    TransportCardId = transportCard.Id,
+                    Description = "Recarga de saldo",
+                    Amount = request.Amount,
                     Date = DateTime.UtcNow
-                }, cancellationToken);
+                };
+                await _context.TransportTransactions.AddAsync(transportTransaction, cancellationToken);
+
+                await _context.SaveChangesAsync(cancellationToken);
+
+                await _paymentRepository.AddPaymentAsync(new Payment
+                {
+                    Id = Guid.NewGuid(),
+                    Servicio = $"Recarga {transportCard.Type}",
+                    Monto = request.Amount,
+                    Fecha = DateTime.UtcNow,
+                    UserId = transportCard.UserId
+                });
+
+                await dbTransaction.CommitAsync(cancellationToken);
+
+                return new RechargeTransportCardResult
+                {
+                    Success = true,
+                    NewTransportBalance = transportCard.Balance,
+                    TransactionId = transportTransaction.Id
+                };
             }
-            
-            transportCard.Balance += request.Amount;
-            transportCard.LastRechargeDate = DateTime.UtcNow;
-
-            var transportTransaction = new TransportTransaction
+            catch
             {
-                Id = Guid.NewGuid(),
-                TransportCardId = transportCard.Id,
-                Description = "Recarga de saldo",
-                Amount = request.Amount,
-                Date = DateTime.UtcNow
-            };
-            await _context.TransportTransactions.AddAsync(transportTransaction, cancellationToken);
-
-            // Guarda tarjeta de pago (si aplica), tarjeta de transporte y su transacción
-            await _context.SaveChangesAsync(cancellationToken);
-
-            // Se registra también en el historial general de pagos (módulo Payments)
-            await _paymentRepository.AddPaymentAsync(new Payment
-            {
-                Id = Guid.NewGuid(),
-                Servicio = $"Recarga {transportCard.Type}",
-                Monto = request.Amount,
-                Fecha = DateTime.UtcNow,
-                UserId = transportCard.UserId
-            });
-
-            await dbTransaction.CommitAsync(cancellationToken);
-
-            return new RechargeTransportCardResult
-            {
-                Success = true,
-                NewTransportBalance = transportCard.Balance,
-                TransactionId = transportTransaction.Id
-            };
-        }
-        catch
-        {
-            await dbTransaction.RollbackAsync(cancellationToken);
-            throw;
-        }
+                await dbTransaction.RollbackAsync(cancellationToken);
+                throw;
+            }
+        });
     }
 }
