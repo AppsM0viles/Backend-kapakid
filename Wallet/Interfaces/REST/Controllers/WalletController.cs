@@ -15,7 +15,13 @@ public class WalletController : ControllerBase
     {
         _mediator = mediator;
     }
-
+    
+    public class RechargeTransportCardRequest
+    {
+        public Guid? PaymentCardId { get; set; }
+        public decimal Amount { get; set; }
+    }
+    
     [HttpPost("payment-cards")]
     public async Task<IActionResult> CreatePaymentCard([FromBody] CreatePaymentCardCommand command)
     {
@@ -67,4 +73,36 @@ public class WalletController : ControllerBase
         if (!result) return NotFound();
         return Ok(new { success = true });
     }
+    
+    [HttpPost("transport-cards/{id:guid}/recharge")]
+    public async Task<IActionResult> RechargeTransportCard(Guid id, [FromBody] RechargeTransportCardRequest body)
+    {
+        var command = new RechargeTransportCardCommand
+        {
+            TransportCardId = id,
+            PaymentCardId = body.PaymentCardId,
+            Amount = body.Amount
+        };
+
+        var result = await _mediator.Send(command);
+
+        if (!result.Success)
+            return BadRequest(new { success = false, message = result.Message });
+
+        return Ok(new
+        {
+            success = true,
+            newBalance = result.NewTransportBalance,
+            transactionId = result.TransactionId
+        });
+    }
+
+    [HttpGet("transport-cards/{id:guid}/transactions")]
+    public async Task<IActionResult> GetTransportCardTransactions(Guid id)
+    {
+        var result = await _mediator.Send(new GetTransportCardTransactionsQuery { TransportCardId = id });
+        if (result == null) return NotFound();
+        return Ok(result);
+    }
+    
 }
