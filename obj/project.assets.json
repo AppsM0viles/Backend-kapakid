@@ -4057,11 +4057,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Desktop\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj",
+      "projectUniqueName": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Documents\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj",
       "projectName": "FinTrackBack",
-      "projectPath": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Desktop\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj",
+      "projectPath": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Documents\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\FinTrackBack.csproj",
       "packagesPath": "C:\\Users\\rault\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Desktop\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\obj\\",
+      "outputPath": "C:\\Users\\rault\\OneDrive - Universidad Peruana de Ciencias\\Documents\\APPSMOVILESPROYCTOKOTLIN\\Backend-kapakid\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\rault\\AppData\\Roaming\\NuGet\\NuGet.Config",
